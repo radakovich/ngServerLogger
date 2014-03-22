@@ -1,11 +1,23 @@
 var gulp = require('gulp');
-var jasmine = require('gulp-jasmine');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
+var karma = require('gulp-karma');
+
+var testFiles = [
+    'bower_components/angular/angular.js',
+    'lib/**/*.js',
+    'test/**/*.js'
+];
 
 gulp.task('test', function(){
-    gulp.src('test/**/*.js')
-        .pipe(jasmine());
+    gulp.src(testFiles)
+        .pipe(karma({
+            configFile: 'test/karma.config.js',
+            action: 'run'
+        }))
+        .on('error', function(err){
+            throw err;
+        });
 });
 
 gulp.task('lint', function(){
