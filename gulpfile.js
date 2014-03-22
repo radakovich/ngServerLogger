@@ -25,10 +25,7 @@ gulp.task('test', ['appscripts'], function(){
         .pipe(karma({
             configFile: 'test/karma.conf.js',
             action: 'run'
-        }))
-        .on('error', function(err){
-            throw err;
-        });
+        }));
 });
 
 gulp.task('lint', function(){
