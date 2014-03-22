@@ -4,8 +4,18 @@
 
 module.exports = angular.module('radakovich.ngServerLogger.LoggerService',
     []
-).service('LoggerService', function(){
+).service('LoggerService', function($injector){
 
+    var http;
+
+    return {
+        sendToServer: function(level, msg){
+            if(!http){
+                http = $injector.get('$http');
+            }
+
+        }
+    };
 });
 }).call(this,require("/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/LoggerService.js","/")
 },{"/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8,"buffer":5}],2:[function(require,module,exports){
@@ -14,37 +24,64 @@ module.exports = angular.module('radakovich.ngServerLogger.LoggerService',
 
 module.exports = angular.module('radakovich.ngServerLogger',
     [
-        require('./log').name,
-        require('./logEnum').name
+        require('./log').name
     ]
 );
 
-}).call(this,require("/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bbb98e75.js","/")
-},{"./log":3,"./logEnum":4,"/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8,"buffer":5}],3:[function(require,module,exports){
+}).call(this,require("/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_976c78ce.js","/")
+},{"./log":3,"/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8,"buffer":5}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict'
 
 module.exports = angular.module('radakovich.ngServerLogger.log',
     [
-        require('./LoggerService').name
+        require('./LoggerService').name,
+        require('./logEnum').name
     ]
 ).config(function($provide){
-    $provide.decorator('$log', function($delegate, LoggerService){
+    $provide.decorator('$log', function($delegate, LOGGING_LEVELS, LoggerService){
         var _log = $delegate.log;
         var _info = $delegate.info;
         var _warn = $delegate.warn;
         var _error = $delegate.error;
         var _debug = $delegate.debug;
 
+        $delegate.log = function(msg){
+            LoggerService.sendToServer(LOGGING_LEVELS.INFO, msg);
+
+            _log(msg);
+        }
+
         $delegate.info = function(msg){
+            console.log('inside this thing');
+            LoggerService.sendToServer(LOGGING_LEVELS.INFO, msg);
+
             _info(msg);
+        }
+
+        $delegate.warn = function(msg){
+            LoggerService.sendToServer(LOGGING_LEVELS.WARN, msg);
+
+            _warn(msg);
+        }
+
+        $delegate.error = function(msg){
+            LoggerService.sendToServer(LOGGING_LEVELS.ERROR, msg);
+
+            _error(msg);
+        }
+
+        $delegate.debug = function(msg){
+            LoggerService.sendToServer(LOGGING_LEVELS.DEBUG, msg);
+
+            _debug(msg);
         }
 
         return $delegate;
     });
 });
 }).call(this,require("/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/log.js","/")
-},{"./LoggerService":1,"/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8,"buffer":5}],4:[function(require,module,exports){
+},{"./LoggerService":1,"./logEnum":4,"/home/jake/github/ngServerLogger/node_modules/gulp-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":8,"buffer":5}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict'
 
