@@ -1,5 +1,5 @@
 describe('ngLoggerServer', function(){
-    beforeEach(module('radakovich.ngServerLogger'));
+    beforeEach(module('radakovich.ngServerLogger.logEnum'));
 
     it('should have a LOGGING_LEVELS enum', inject(function(LOGGING_LEVELS){
         expect(LOGGING_LEVELS.ERROR).toEqual({name: 'ERROR', level: 4});
