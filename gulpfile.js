@@ -2,18 +2,28 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var stylish = require('jshint-stylish');
 var karma = require('gulp-karma');
+var browserify = require('gulp-browserify');
 
 var testFiles = [
     'bower_components/angular/angular.js',
     'bower_components/angular-mocks/angular-mocks.js',
-    'lib/**/*.js',
+    'build/js/app.js',
     'test/**/*.js'
 ];
 
-gulp.task('test', function(){
+gulp.task('appscripts', function() {
+    // Single entry point to browserify
+    gulp.src('./lib/app.js')
+        .pipe(browserify({
+            insertGlobals : true
+        }))
+        .pipe(gulp.dest('./build/js'));
+});
+
+gulp.task('test', ['appscripts'], function(){
     gulp.src(testFiles)
         .pipe(karma({
-            configFile: 'test/karma.config.js',
+            configFile: 'test/karma.conf.js',
             action: 'run'
         }))
         .on('error', function(err){
