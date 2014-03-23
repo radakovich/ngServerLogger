@@ -2,7 +2,7 @@
   "name": "ngServerLogger",
   "version": "0.0.1",
   "description": "Angular logging module that sends logging messages to the server using the standard $log service",
-  "main": "index.js",
+  "main": "lib/app.js",
   "directories": {
     "test": "test"
   },
